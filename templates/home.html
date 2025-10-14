@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block page_title %}Welcome{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h2 class="card-title">Welcome to Django Auth Demo</h2>
+            </div>
+            <div class="card-body">
+                {% if user.is_authenticated %}
+                <div class="alert alert-success">
+                    <p>You are logged in as {{ user.username }}.</p>
+                </div>
+                <p>Use the navigation bar to log out.</p>
+                {% else %}
+                <div class="alert alert-info">
+                    <p>You are not logged in.</p>
+                </div>
+                <p>Use the navigation bar to sign up or log in.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}Group Permissions{% endblock %}
+
+{% block page_title %}Permissions for Group: {{ group.name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">Group Information</h3>
+            </div>
+            <div class="card-body">
+                <p><strong>Group Name:</strong> {{ group.name }}</p>
+                <p><strong>Members:</strong> {{ group.user_set.count }} users</p>
+                <p><strong>Permissions:</strong> {{ group.permissions.count }} permissions</p>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">Edit Group Permissions</h3>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <h4 class="mt-4 mb-3">Permissions</h4>
+                    
+                    <div class="accordion" id="permissionsAccordion">
+                        {% regroup all_permissions by content_type.app_label as app_list %}
+                        {% for app in app_list %}
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="heading{{ app.grouper|slugify }}">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ app.grouper|slugify }}" aria-expanded="false" aria-controls="collapse{{ app.grouper|slugify }}">
+                                        {{ app.grouper }} Application
+                                    </button>
+                                </h2>
+                                <div id="collapse{{ app.grouper|slugify }}" class="accordion-collapse collapse" aria-labelledby="heading{{ app.grouper|slugify }}" data-bs-parent="#permissionsAccordion">
+                                    <div class="accordion-body">
+                                        {% regroup app.list by content_type.model as model_list %}
+                                        {% for model in model_list %}
+                                            <h5 class="mt-3">{{ model.grouper|title }}</h5>
+                                            <div class="row">
+                                                {% for permission in model.list %}
+                                                    <div class="col-md-4 mb-2">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" 
+                                                                   id="permission_{{ permission.id }}" 
+                                                                   name="permissions" 
+                                                                   value="{{ permission.id }}" 
+                                                                   {% if permission in group_permissions %}checked{% endif %}>
+                                                            <label class="form-check-label" for="permission_{{ permission.id }}">
+                                                                {{ permission.name }}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="mt-4 d-flex justify-content-between">
+                        <a href="{% url 'group_list' %}" class="btn btn-secondary">
+                            <i data-feather="arrow-left"></i> Back to Groups
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i data-feather="save"></i> Save Permissions
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

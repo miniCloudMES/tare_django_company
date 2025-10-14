@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}員工管理{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>員工管理</h2>
+        <a href="{% url 'employee_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> 新增員工
+        </a>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>用戶名</th>
+                            <th>姓名</th>
+                            <th>身份證號</th>
+                            <th>性別</th>
+                            <th>部門</th>
+                            <th>職稱</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for employee in employees %}
+                            <tr>
+                                <td>{{ employee.user.username }}</td>
+                                <td>{{ employee.user.last_name }}{{ employee.user.first_name }}</td>
+                                <td>{{ employee.id_number }}</td>
+                                <td>{{ employee.get_gender_display }}</td>
+                                <td>{{ employee.department.name|default:"-" }}</td>
+                                <td>{{ employee.job_title.name|default:"-" }}</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="{% url 'employee_edit' employee.id %}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-edit"></i> 編輯
+                                        </a>
+                                        <a href="{% url 'employee_delete' employee.id %}" class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-trash"></i> 刪除
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center">尚無員工記錄</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

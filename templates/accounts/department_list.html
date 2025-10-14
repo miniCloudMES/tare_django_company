@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}部門管理{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">部門管理</h6>
+            <a href="{% url 'department_create' %}" class="btn btn-primary btn-sm">
+                <i data-feather="plus"></i> 創建新部門
+            </a>
+        </div>
+        <div class="card-body">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>部門名稱</th>
+                            <th>描述</th>
+                            <th>創建時間</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for department in departments %}
+                            <tr>
+                                <td>{{ department.name }}</td>
+                                <td>{{ department.description|default:"-" }}</td>
+                                <td>{{ department.created_at|date:"Y-m-d H:i" }}</td>
+                                <td>
+                                    <a href="{% url 'department_edit' department.id %}" class="btn btn-info btn-sm">
+                                        <i data-feather="edit-2"></i> 編輯
+                                    </a>
+                                    <a href="{% url 'department_delete' department.id %}" class="btn btn-danger btn-sm">
+                                        <i data-feather="trash-2"></i> 刪除
+                                    </a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center">暫無部門數據</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

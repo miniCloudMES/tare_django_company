@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}Django Auth Tutorial{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <style>
+        .navbar {
+            z-index: 1030; /* Ensure navbar is above sidebar */
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100; /* Behind the navbar */
+            padding: 56px 0 0; /* Adjusted for navbar height, assuming navbar is 56px */
+            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+        }
+        .sidebar-sticky {
+            position: relative;
+            top: 0;
+            height: calc(100vh - 56px); /* Adjusted for navbar height */
+            padding-top: .5rem;
+            overflow-x: hidden;
+            overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+        }
+        .navbar-brand {
+            padding-top: .75rem;
+            padding-bottom: .75rem;
+            font-size: 1rem;
+            /* background-color: rgba(0, 0, 0, .25); */ /* Optional: remove or adjust if it conflicts */
+            /* box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25); */ /* Optional: remove or adjust */
+        }
+        .navbar .navbar-toggler {
+            top: .25rem;
+            right: 1rem;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary ">
+    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="{% url 'home' %}">Django Auth</a>
+    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <ul class="navbar-nav">
+        {% if user.is_authenticated %}
+            <li class="nav-item">
+                <span class="nav-link">Hi {{ user.username }}!</span>
+            </li>
+            <li class="nav-item">
+                <form method="post" action="{% url 'logout' %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn nav-link border-0 bg-transparent px-3">Log Out</button>
+                </form>
+            </li>
+        {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}">Log In</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'signup' %}">Sign Up</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+            <div class="position-sticky pt-3 sidebar-sticky">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'home' %}">
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            Orders
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#products-submenu" data-bs-toggle="collapse" aria-expanded="false">
+                            Products <span class="ms-auto">&#9662;</span>
+                        </a>
+                        <ul class="collapse list-unstyled ps-3" id="products-submenu">
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">All Products</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Add Product</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Categories</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            Customers
+                        </a>
+                    </li>
+                    
+                    {% if user.is_authenticated and user.is_staff %}
+                    <li class="nav-item mt-4">
+                        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                            <span>管理</span>
+                        </h6>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'permissions_panel' %}">
+                            <span data-feather="shield"></span>
+                            權限控制
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'group_list' %}">
+                            <span data-feather="users"></span>
+                            群組管理
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#hr-submenu" data-bs-toggle="collapse" aria-expanded="false">
+                            <span data-feather="user"></span>
+                            人力資源管理 <span class="ms-auto">&#9662;</span>
+                        </a>
+                        <ul class="collapse list-unstyled ps-3" id="hr-submenu">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'department_list' %}">
+                                    <span data-feather="briefcase"></span>
+                                    部門管理
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'jobtitle_list' %}">
+                                    <span data-feather="award"></span>
+                                    職稱管理
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'employee_list' %}">
+                                    <span data-feather="users"></span>
+                                    員工管理
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/" target="_blank">
+                            <span data-feather="settings"></span>
+                            Django 管理
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="pt-3 pb-2 mb-3 border-bottom">
+                 <h1 class="h2">{% block page_title %}Dashboard{% endblock %}</h1>
+            </div>
+            {% block content %}
+            {% endblock %}
+        </main>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize Feather icons
+        document.addEventListener('DOMContentLoaded', function() {
+            feather.replace();
+        });
+    </script>
+</body>
+</html>

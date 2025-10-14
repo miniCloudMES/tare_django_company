@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}確認刪除員工{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-danger text-white">
+            <h2>確認刪除</h2>
+        </div>
+        <div class="card-body">
+            <p class="lead">您確定要刪除員工 <strong>{{ employee.user.username }}</strong> ({{ employee.user.last_name }}{{ employee.user.first_name }}) 嗎？</p>
+            <p class="text-danger">此操作將永久刪除該員工的所有資料，且無法恢復。</p>
+            
+            <form method="post">
+                {% csrf_token %}
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{% url 'employee_list' %}" class="btn btn-secondary">取消</a>
+                    <button type="submit" class="btn btn-danger">確認刪除</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}確認刪除職稱{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">確認刪除職稱</h6>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-warning" role="alert">
+                您確定要刪除職稱 <strong>{{ jobtitle.name }}</strong> 嗎？此操作不可逆。
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <button type="submit" class="btn btn-danger">確認刪除</button>
+                    <a href="{% url 'jobtitle_list' %}" class="btn btn-secondary">取消</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

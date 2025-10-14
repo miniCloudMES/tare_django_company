@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}刪除部門{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">確認刪除部門</h6>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-warning">
+                <h5>您確定要刪除部門 "{{ department.name }}" 嗎？</h5>
+                <p>此操作不可逆，刪除後將無法恢復。</p>
+            </div>
+            
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <a href="{% url 'department_list' %}" class="btn btn-secondary">取消</a>
+                    <button type="submit" class="btn btn-danger">確認刪除</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

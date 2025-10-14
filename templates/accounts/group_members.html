@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block title %}Group Members{% endblock %}
+
+{% block page_title %}Members for Group: {{ group.name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">Group Information</h3>
+            </div>
+            <div class="card-body">
+                <p><strong>Group Name:</strong> {{ group.name }}</p>
+                <p><strong>Members:</strong> {{ group_members.count }} users</p>
+                <p><strong>Permissions:</strong> {{ group.permissions.count }} permissions</p>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <!-- Current Members -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h3 class="card-title mb-0">Current Members</h3>
+                    </div>
+                    <div class="card-body">
+                        {% if group_members %}
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="remove">
+                                
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Select</th>
+                                                <th>Username</th>
+                                                <th>Email</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for user in group_members %}
+                                            <tr>
+                                                <td>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" name="users" value="{{ user.id }}" id="user-{{ user.id }}">
+                                                    </div>
+                                                </td>
+                                                <td>{{ user.username }}</td>
+                                                <td>{{ user.email }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-danger mt-3">
+                                    <i data-feather="user-minus"></i> Remove Selected Users
+                                </button>
+                            </form>
+                        {% else %}
+                            <div class="alert alert-info">
+                                This group has no members yet.
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Add Members -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h3 class="card-title mb-0">Add Members</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="add">
+                            
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Select</th>
+                                            <th>Username</th>
+                                            <th>Email</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for user in all_users %}
+                                            {% if user not in group_members %}
+                                            <tr>
+                                                <td>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" name="users" value="{{ user.id }}" id="add-user-{{ user.id }}">
+                                                    </div>
+                                                </td>
+                                                <td>{{ user.username }}</td>
+                                                <td>{{ user.email }}</td>
+                                            </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-success mt-3">
+                                <i data-feather="user-plus"></i> Add Selected Users
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <a href="{% url 'group_list' %}" class="btn btn-secondary">
+                <i data-feather="arrow-left"></i> Back to Groups
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
