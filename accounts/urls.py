@@ -27,3 +27,11 @@ urlpatterns = [
     path('employees/<int:employee_id>/edit/', views.employee_edit, name='employee_edit'),
     path('employees/<int:employee_id>/delete/', views.employee_delete, name='employee_delete'),
 ]
+
+
+
+from django.conf import settings
+from django.conf.urls.static import static
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

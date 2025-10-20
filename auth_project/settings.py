@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'accounts',  # Add our new app
+    'django_summernote',  # WYSIWYG編輯器
 ]
 
 MIDDLEWARE = [
@@ -134,3 +135,22 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Employee photos directory
 EMPLOYEE_PHOTOS_DIR = 'employee_photos'
+
+# Summernote配置
+SUMMERNOTE_CONFIG = {
+    'summernote': {
+        'width': '100%',
+        'height': '300px',
+        'toolbar': [
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['insert', ['link', 'picture']],
+            ['view', ['fullscreen', 'codeview', 'help']],
+        ],
+        'lang': 'zh-TW',
+    },
+}

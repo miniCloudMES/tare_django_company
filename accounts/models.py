@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
+from django.forms import widgets
+from django_summernote.widgets import SummernoteWidget
 
 # Create your models here.
 class Department(models.Model):
